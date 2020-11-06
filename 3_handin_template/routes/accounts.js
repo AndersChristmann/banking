@@ -6,7 +6,9 @@ const Account = require('../models/account');
 router.get('/', async (req, res) => {
     try {
         // 1. return accounts from database instead
-        res.end("This is the GET endpoint on accounts")
+        Account.find()
+            .then(account => res.json(account))
+            .catch(err => res.status(400).json('Error ' + err))
     } catch (err) {
         console.log({message: err})
     };
@@ -21,8 +23,13 @@ router.post('/', async (req, res) => {
     res.json(user);
 });
 
-// Implement a new endpoint, that will be able to return a specific account by id. 
-// instead of just printing, return the actual account. 
+// Implement a new endpoint, that will be able to return a specific account by id.
+// instead of just printing, return the actual account.
+router.route('/:id').get((req, res) => {
+    Account.findById(req.params.id)
+        .then(account => res.json(account))
+        .catch(err => res.status(400).json('Error ' + err))
+});
 
 
 module.exports = router;

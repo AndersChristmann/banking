@@ -3,6 +3,8 @@ const app = express();
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 
+require('dotenv').config();
+
 //Added Json Body-parser
 app.use(bodyParser.json());
 
@@ -13,6 +15,14 @@ app.use('/accounts', accountRoute)
 //Initial route
 app.get('/', (req, res) => {
     res.send('Welcome to the banking app');
+});
+
+// Connect to database
+const uri = process.env.ATLAS_URI;
+mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true });
+const connection = mongoose.connection;
+connection.once('once', () => {
+    console.log('MongoDB database connection established successfully.');
 });
 
 //Start listening
